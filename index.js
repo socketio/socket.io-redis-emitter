@@ -39,6 +39,10 @@ function Emitter(redis, opts){
   if (!(this instanceof Emitter)) return new Emitter(redis, opts);
   opts = opts || {};
 
+  if ('string' == typeof redis) {
+    redis = clientUri(redis);
+  }
+
   if (redis && !redis.hset) {
     opts = redis;
     redis = null;
@@ -109,3 +113,17 @@ Emitter.prototype.emit = function(){
 
   return this;
 };
+
+/**
+ * Create a redis client from a
+ * `host:port` uri string.
+ *
+ * @param {String} uri
+ * @return {Client} node client
+ * @api private
+ */
+
+function clientUri(uri){
+  uri = uri.split(':');
+  return client(uri[1], uri[0]);
+}

@@ -27,6 +27,11 @@ The following options are allowed:
 - `host`: host to connect to redis on (`localhost`)
 - `port`: port to connect to redis on (`6379`)
 
+### Emitter(clientUri[, opts]
+
+Same as above, but `clientUri` is a string of the format `host:port`
+to connect to redis to.
+
 ### Emitter(opts)
 
 If you don't want to supply a redis client object, and want
