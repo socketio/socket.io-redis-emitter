@@ -43,6 +43,11 @@ If you don't want to supply a redis client object, and want
 
 Specifies a specific `room` that you want to emit to.
 
+
+### Emitter#of(namespace:String):Emitter
+
+Specifies a specific namespace that you want to emit to.
+
 ## License
 
 MIT
