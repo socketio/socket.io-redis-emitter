@@ -112,6 +112,8 @@ Emitter.prototype.emit = function(){
   if (this._flags.nsp) {
     packet.nsp = this._flags.nsp;
     delete this._flags.nsp;
+  } else {
+    packet.nsp = '/';
   }
 
   // publish

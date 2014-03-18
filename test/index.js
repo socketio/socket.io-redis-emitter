@@ -59,7 +59,7 @@ describe('emitter', function() {
 
     cli.on('connect', function() {
       var emitter = ioe({ host: 'localhost', port: '6379' });
-      emitter.of('nsp').broadcast.emit('broadcast event', 'broadcast payload');
+      emitter.of('/nsp').broadcast.emit('broadcast event', 'broadcast payload');
     });
   });
 
@@ -75,7 +75,7 @@ describe('emitter', function() {
 
       b.on('connect', function() {
         var emitter = ioe({ host: 'localhost', port: '6379' });
-        emitter.of('nsp').broadcast.emit('broadcast event', 'broadcast payload');
+        emitter.of('/nsp').broadcast.emit('broadcast event', 'broadcast payload');
       });
     });
 
