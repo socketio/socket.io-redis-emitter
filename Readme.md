@@ -26,6 +26,7 @@ The following options are allowed:
 - `key`: the name of the key to pub/sub events on as prefix (`socket.io`)
 - `host`: host to connect to redis on (`localhost`)
 - `port`: port to connect to redis on (`6379`)
+- `socket`: unix domain socket to connect to redis on (`"/tmp/redis.sock"`)
 
 ### Emitter(clientUri[, opts]
 

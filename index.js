@@ -49,9 +49,11 @@ function Emitter(redis, opts){
   }
 
   if (!redis) {
-    if (!opts.host) throw new Error('Missing redis `host`');
-    if (!opts.port) throw new Error('Missing redis `port`');
-    redis = client(opts.port, opts.host);
+    if (!opts.socket && !opts.host) throw new Error('Missing redis `host`');
+    if (!opts.socket && !opts.port) throw new Error('Missing redis `port`');
+    redis = opts.socket
+      ? client(opts.socket)
+      : client(opts.port, opts.host);
   }
 
   this.redis = redis;
