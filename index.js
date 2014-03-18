@@ -85,6 +85,18 @@ Emitter.prototype.to = function(room){
 };
 
 /**
+ * Limit emission to certain `namespace`.
+ *
+ * @param {String} namespace
+ */
+
+Emitter.prototype.of = function(nsp) {
+  debug('nsp set to %s', nsp);
+  this._flags.nsp = nsp;
+  return this;
+};
+
+/**
  * Send the packet.
  *
  * @api private
@@ -96,6 +108,11 @@ Emitter.prototype.emit = function(){
   var packet = {};
   packet.type = hasBin(args) ? parser.BINARY_EVENT : parser.EVENT;
   packet.data = args;
+  // set namespace to packet
+  if (this._flags.nsp) {
+    packet.nsp = this._flags.nsp;
+    delete this._flags.nsp;
+  }
 
   // publish
   this.redis.publish(this.key, msgpack([packet, {
