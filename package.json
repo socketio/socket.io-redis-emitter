@@ -12,9 +12,9 @@
   "devDependencies": {
     "mocha": "1.18.1",
     "expect.js": "0.3.1",
-    "socket.io": "git://github.com/learnboost/socket.io#f5a8ac293aed",
-    "socket.io-client": "git://github.com/learnboost/socket.io-client#aa5ecb3ce",
-    "socket.io-redis": "git://github.com/automattic/socket.io-redis#88f4f6144955be",
+    "socket.io": "1.0.0-pre",
+    "socket.io-client": "1.0.0-pre",
+    "socket.io-redis": "0.1.1",
     "redis": "0.10.1"
   }
 }
