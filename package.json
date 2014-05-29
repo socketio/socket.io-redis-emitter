@@ -7,13 +7,13 @@
     "redis": "0.10.1",
     "msgpack-js": "0.3.0",
     "has-binary-data": "0.1.1",
-    "socket.io-parser": "2.1.1"
+    "socket.io-parser": "2.1.2"
   },
   "devDependencies": {
     "mocha": "1.18.1",
     "expect.js": "0.3.1",
-    "socket.io": "1.0.0-pre",
-    "socket.io-client": "1.0.0-pre",
+    "socket.io": "1.0.1",
+    "socket.io-client": "1.0.1",
     "socket.io-redis": "0.1.1",
     "redis": "0.10.1"
   }
