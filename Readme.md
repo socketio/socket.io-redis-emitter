@@ -7,7 +7,7 @@ easily from non-socket.io processes.
 ## How to use
 
 ```js
-var io = require('socket.io-emitter')();
+var io = require('socket.io-emitter')({ host: '127.0.0.1', port: 6379 });
 setInterval(function(){
   io.emit('time', new Date);
 }, 5000);
