@@ -6,7 +6,6 @@
 var client = require('redis').createClient;
 var parser = require('socket.io-parser');
 var hasBin = require('has-binary-data');
-var msgpack = require('msgpack-js').encode;
 var debug = require('debug')('socket.io-emitter');
 
 /**
@@ -123,7 +122,7 @@ Emitter.prototype.emit = function(){
   }
 
   // publish
-  this.redis.publish(this.key, msgpack([packet, {
+  this.redis.publish(this.key, JSON.stringify([packet, {
     rooms: this._rooms,
     flags: this._flags
   }]));
