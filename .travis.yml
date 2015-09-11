@@ -1,12 +1,23 @@
 language: node_js
+sudo: false
+
 node_js:
-  - "0.10"
-  - "0.11"
+  - 0.10
+  - 0.12
+  - iojs-1
+  - iojs-2
+  - iojs-3
+  - 4
 
 matrix:
   fast_finish: true
   allow_failures:
-    - node_js: "0.11"
+    - node_js:
+      - iojs-3
+      - 4
 
 notifications:
   irc: "irc.freenode.org#socket.io"
+
+services:
+  - redis-server

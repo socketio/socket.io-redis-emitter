@@ -13,7 +13,7 @@ function client(srv, nsp, opts){
   }
   var addr = srv.address();
   if (!addr) addr = srv.listen().address();
-  var url = 'ws://' + addr.address + ':' + addr.port + (nsp || '');
+  var url = 'http://localhost:' + addr.port + (nsp || '');
   return ioc(url, opts);
 }
 
