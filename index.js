@@ -6,7 +6,7 @@
 var client = require('redis').createClient;
 var parser = require('socket.io-parser');
 var hasBin = require('has-binary-data');
-var msgpack = require('msgpack-js').encode;
+var msgpack = require('msgpack-js');
 var debug = require('debug')('socket.io-emitter');
 
 /**
@@ -26,6 +26,14 @@ var flags = [
   'volatile',
   'broadcast'
 ];
+
+/**
+ * uid for emitter
+ *
+ * @api private
+ */
+
+var uid = 'emitter';
 
 /**
  * Socket.IO redis based emitter.
@@ -57,7 +65,7 @@ function Emitter(redis, opts){
   }
 
   this.redis = redis;
-  this.key = (opts.key || 'socket.io') + '#emitter';
+  this.prefix = (opts.key || 'socket.io');
 
   this._rooms = [];
   this._flags = {};
@@ -105,10 +113,12 @@ Emitter.prototype.of = function(nsp) {
 /**
  * Send the packet.
  *
- * @api private
+ * @api public
  */
 
 Emitter.prototype.emit = function(){
+  var self = this;
+
   // packet
   var args = Array.prototype.slice.call(arguments);
   var packet = {};
@@ -122,11 +132,22 @@ Emitter.prototype.emit = function(){
     packet.nsp = '/';
   }
 
-  // publish
-  this.redis.publish(this.key, msgpack([packet, {
+  var opts = {
     rooms: this._rooms,
     flags: this._flags
-  }]));
+  };
+  var chn = this.prefix + '#' + packet.nsp + '#';
+  var msg = msgpack.encode([uid, packet, opts]);
+
+  // publish
+  if (opts.rooms && opts.rooms.length) {
+    opts.rooms.forEach(function(room) {
+      var chnRoom = chn + room + '#';
+      self.redis.publish(chnRoom, msg);
+    });
+  } else {
+    this.redis.publish(chn, msg);
+  }
 
   // reset state
   this._rooms = [];
