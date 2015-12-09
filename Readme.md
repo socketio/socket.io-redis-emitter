@@ -1,6 +1,9 @@
 
 # socket.io-emitter
 
+[![Build Status](https://travis-ci.org/socketio/socket.io-emitter.svg?branch=master)](https://travis-ci.org/socketio/socket.io-emitter)
+[![NPM version](https://badge.fury.io/js/socket.io-emitter.svg)](http://badge.fury.io/js/socket.io-emitter)
+
 `socket.io-emitter` allows you to communicate with socket.io servers
 easily from non-socket.io processes.
 
