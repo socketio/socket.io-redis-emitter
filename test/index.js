@@ -13,7 +13,7 @@ function client(srv, nsp, opts){
   }
   var addr = srv.address();
   if (!addr) addr = srv.listen().address();
-  var url = 'ws://' + addr.address + ':' + addr.port + (nsp || '');
+  var url = 'http://localhost:' + addr.port + (nsp || '');
   return ioc(url, opts);
 }
 
@@ -22,7 +22,7 @@ describe('emitter', function() {
   describe('in namespaces', function(){
     beforeEach(function() {
       var pub = redis.createClient();
-      var sub = redis.createClient(null, null, {detect_buffers: true});
+      var sub = redis.createClient(null, null, {return_buffers: true});
       srv = http();
       var sio = io(srv, {adapter: redisAdapter({pubClient: pub, subClient: sub})});
 
@@ -88,7 +88,7 @@ describe('emitter', function() {
   describe('in rooms', function(){
     it('should be able to emit to a room', function(done){
       var pub = redis.createClient();
-      var sub = redis.createClient(null, null, {detect_buffers: true});
+      var sub = redis.createClient(null, null, {return_buffers: true});
       srv = http();
       var sio = io(srv, {adapter: redisAdapter({pubClient: pub, subClient: sub})});
 
@@ -130,7 +130,7 @@ describe('emitter', function() {
 
     it('should be able to emit to a socket by id', function(done){
       var pub = redis.createClient();
-      var sub = redis.createClient(null, null, {detect_buffers: true});
+      var sub = redis.createClient(null, null, {return_buffers: true});
       srv = http();
       var sio = io(srv, {adapter: redisAdapter({pubClient: pub, subClient: sub})});
 
