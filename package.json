@@ -1,6 +1,6 @@
 {
   "name": "socket.io-emitter",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "description": "",
   "repository": {
     "type": "git",
@@ -13,7 +13,7 @@
     "debug": "2.2.0",
     "redis": "2.4.2",
     "msgpack-js": "0.3.0",
-    "has-binary-data": "0.1.5",
+    "has-binary": "0.1.7",
     "socket.io-parser": "2.2.6"
   },
   "devDependencies": {

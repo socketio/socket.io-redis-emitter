@@ -5,7 +5,7 @@
 
 var client = require('redis').createClient;
 var parser = require('socket.io-parser');
-var hasBin = require('has-binary-data');
+var hasBin = require('has-binary');
 var msgpack = require('msgpack-js');
 var debug = require('debug')('socket.io-emitter');
 
