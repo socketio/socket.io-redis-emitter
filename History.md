@@ -1,4 +1,10 @@
 
+1.1.0 / 2017-01-12
+==================
+
+  * [docs] Updated README with more usage examples. (#33)
+  * [feature] Removed clientUri() (#41)
+
 1.0.0 / 2015-12-10
 ==================
 
