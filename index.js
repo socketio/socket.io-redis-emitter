@@ -64,6 +64,12 @@ function Emitter(redis, opts){
       : client(opts.port, opts.host);
   }
 
+  if (opts.pass) {
+    redis.auth(opts.pass, function(err){
+      if (err) throw err;
+    });
+  }
+
   this.redis = redis;
   this.prefix = (opts.key || 'socket.io');
 
