@@ -19,7 +19,7 @@ setInterval(function(){
 // Different constructor options.
 
 //1. Initialize with host:port string
-var io = require('socket.io-emitter')("loaclhost:6379")
+var io = require('socket.io-emitter')("localhost:6379")
 // 2. Initlize with host, port object.
 var io = require('socket.io-emitter')({ host: '127.0.0.1', port: 6379 });
 // 3. Can use other node_redis compatible client eg; ioredis.
@@ -41,6 +41,20 @@ var Cluster = new Redis.Cluster([
 ]);
 var io = require('socket.io-emitter')(Cluster);
 
+```
+
+## Error handling
+
+Access the `redis` to subscribe to its `error` event:
+
+```js
+var emitter = require('socket.io-emitter')("localhost:6379");
+
+emitter.redis.on('error', onError);
+
+function onError(err){
+  console.log(err);
+}
 ```
 
 ## API
