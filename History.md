@@ -1,4 +1,12 @@
 
+2.0.0 / 2017-01-12
+==================
+
+  * [chore] Add MIT License (#46)
+  * [docs] Add a note about error handling (#45)
+  * [chore] Bump dependencies and move to msgpack-lite (#44)
+  * [test] Add newer nodejs versions in Travis configuration (#43)
+
 1.1.0 / 2017-01-12
 ==================
 
