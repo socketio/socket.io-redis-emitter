@@ -106,7 +106,7 @@ Emitter.prototype.to = function(room){
 
 Emitter.prototype.of = function(nsp) {
   debug('nsp set to %s', nsp);
-  this._flags.nsp = nsp;
+    this._nsp = nsp;
   return this;
 };
 
@@ -125,9 +125,8 @@ Emitter.prototype.emit = function(){
   packet.type = hasBin(args) ? parser.BINARY_EVENT : parser.EVENT;
   packet.data = args;
   // set namespace to packet
-  if (this._flags.nsp) {
-    packet.nsp = this._flags.nsp;
-    delete this._flags.nsp;
+  if (this._nsp) {
+    packet.nsp = this._nsp;
   } else {
     packet.nsp = '/';
   }
