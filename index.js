@@ -6,7 +6,7 @@
 var client = require('redis').createClient;
 var parser = require('socket.io-parser');
 var hasBin = require('has-binary');
-var msgpack = require('msgpack-lite');
+var notepack = require('notepack.io');
 var debug = require('debug')('socket.io-emitter');
 
 /**
@@ -137,12 +137,12 @@ Emitter.prototype.emit = function(){
     flags: this._flags
   };
   var chn = this.prefix + '#' + packet.nsp + '#';
-  var msg = msgpack.encode([uid, packet, opts]);
+  var msg = notepack.encode([uid, packet, opts]);
 
   // publish
   if (opts.rooms && opts.rooms.length) {
     opts.rooms.forEach(function(room) {
-      var chnRoom = chn + room + '#';
+      var chnRoom = chn + room;
       self.redis.publish(chnRoom, msg);
     });
   } else {
