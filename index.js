@@ -116,12 +116,10 @@ Emitter.prototype.of = function(nsp) {
  */
 
 Emitter.prototype.emit = function(){
-  var self = this;
-
   // packet
   var args = Array.prototype.slice.call(arguments);
   var packet = { type: parser.EVENT, data: args };
-  
+
   // set namespace to packet
   if (this._flags.nsp) {
     packet.nsp = this._flags.nsp;
