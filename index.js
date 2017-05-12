@@ -5,8 +5,7 @@
 
 var client = require('redis').createClient;
 var parser = require('socket.io-parser');
-var hasBin = require('has-binary');
-var notepack = require('notepack.io');
+var msgpack = require('notepack.io');
 var debug = require('debug')('socket.io-emitter');
 
 /**
@@ -121,9 +120,8 @@ Emitter.prototype.emit = function(){
 
   // packet
   var args = Array.prototype.slice.call(arguments);
-  var packet = {};
-  packet.type = hasBin(args) ? parser.BINARY_EVENT : parser.EVENT;
-  packet.data = args;
+  var packet = { type: parser.EVENT, data: args };
+  
   // set namespace to packet
   if (this._flags.nsp) {
     packet.nsp = this._flags.nsp;
@@ -137,14 +135,11 @@ Emitter.prototype.emit = function(){
     flags: this._flags
   };
   var chn = this.prefix + '#' + packet.nsp + '#';
-  var msg = notepack.encode([uid, packet, opts]);
+  var msg = msgpack.encode([uid, packet, opts]);
 
   // publish
-  if (opts.rooms && opts.rooms.length) {
-    opts.rooms.forEach(function(room) {
-      var chnRoom = chn + room;
-      self.redis.publish(chnRoom, msg);
-    });
+  if (opts.rooms && opts.rooms.length === 1) {
+    this.redis.publish(chn + opts.rooms[0], msg);
   } else {
     this.redis.publish(chn, msg);
   }
