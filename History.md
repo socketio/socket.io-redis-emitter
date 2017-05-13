@@ -1,4 +1,10 @@
 
+3.0.0 / 2017-05-13
+==================
+
+  * [feat] Make `of` return a new Emitter instance (#56)
+  * [feat] Make the module compatible with socket.io-redis 5.x (#55)
+
 2.0.0 / 2017-01-12
 ==================
 
