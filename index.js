@@ -12,7 +12,7 @@ var debug = require('debug')('socket.io-emitter');
  * Module exports.
  */
 
-module.exports = Emitter;
+module.exports = init;
 
 /**
  * Flags.
@@ -42,8 +42,7 @@ var uid = 'emitter';
  * @api public
  */
 
-function Emitter(redis, opts){
-  if (!(this instanceof Emitter)) return new Emitter(redis, opts);
+function init(redis, opts){
   opts = opts || {};
 
   if ('string' == typeof redis) {
@@ -63,8 +62,16 @@ function Emitter(redis, opts){
       : client(opts.port, opts.host);
   }
 
+  var prefix = opts.key || 'socket.io';
+
+  return new Emitter(redis, prefix, '/');
+}
+
+function Emitter(redis, prefix, nsp){
   this.redis = redis;
-  this.prefix = (opts.key || 'socket.io');
+  this.prefix = prefix;
+  this.nsp = nsp;
+  this.channel = this.prefix + '#' + nsp + '#';
 
   this._rooms = [];
   this._flags = {};
@@ -98,15 +105,13 @@ Emitter.prototype.to = function(room){
 };
 
 /**
- * Limit emission to certain `namespace`.
+ * Return a new emitter for the given namespace.
  *
  * @param {String} namespace
  */
 
-Emitter.prototype.of = function(nsp) {
-  debug('nsp set to %s', nsp);
-  this._flags.nsp = nsp;
-  return this;
+Emitter.prototype.of = function(nsp){
+  return new Emitter(this.redis, this.prefix, nsp);
 };
 
 /**
@@ -118,29 +123,20 @@ Emitter.prototype.of = function(nsp) {
 Emitter.prototype.emit = function(){
   // packet
   var args = Array.prototype.slice.call(arguments);
-  var packet = { type: parser.EVENT, data: args };
-
-  // set namespace to packet
-  if (this._flags.nsp) {
-    packet.nsp = this._flags.nsp;
-    delete this._flags.nsp;
-  } else {
-    packet.nsp = '/';
-  }
+  var packet = { type: parser.EVENT, data: args, nsp: this.nsp };
 
   var opts = {
     rooms: this._rooms,
     flags: this._flags
   };
-  var chn = this.prefix + '#' + packet.nsp + '#';
-  var msg = msgpack.encode([uid, packet, opts]);
 
-  // publish
+  var msg = msgpack.encode([uid, packet, opts]);
+  var channel = this.channel;
   if (opts.rooms && opts.rooms.length === 1) {
-    this.redis.publish(chn + opts.rooms[0], msg);
-  } else {
-    this.redis.publish(chn, msg);
+    channel += opts.rooms[0] + '#';
   }
+  debug('publishing message to channel %s', channel);
+  this.redis.publish(channel, msg);
 
   // reset state
   this._rooms = [];
