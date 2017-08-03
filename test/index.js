@@ -19,6 +19,32 @@ function client(srv, nsp, opts){
 
 describe('emitter', function() {
   var srv;
+
+  it('should be able to emit any kind of data', function(done){
+    srv = http();
+    var sio = io(srv, {adapter: redisAdapter()});
+    srv.listen();
+
+    var cli = client(srv, { forceNew: true });
+    var emitter = ioe({ host: 'localhost', port: '6379' });
+
+    var buffer = new Buffer('asdfasdf', 'utf8');
+    var arraybuffer = Uint8Array.of(1, 2, 3, 4).buffer;
+
+    cli.on('connect', function () {
+      emitter.emit('payload', 1, '2', [3], buffer, arraybuffer);
+    });
+
+    cli.on('payload', function(a, b, c, d, e) {
+      expect(a).to.eql(1);
+      expect(b).to.eql('2');
+      expect(c).to.eql([3]);
+      expect(d).to.eql(buffer);
+      expect(e).to.eql(Buffer.from(arraybuffer)); // buffer on the nodejs client-side
+      done();
+    });
+  });
+
   describe('in namespaces', function(){
     beforeEach(function() {
       var pub = redis.createClient();
