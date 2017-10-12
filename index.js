@@ -61,7 +61,7 @@ function init(redis, opts){
       ? client(opts.socket)
       : client(opts.port, opts.host);
 
-    if (opts.unref) {
+    if (opts.unref && redis.unref) {
       redis.unref()
     }
   }
