@@ -60,6 +60,10 @@ function init(redis, opts){
     redis = opts.socket
       ? client(opts.socket)
       : client(opts.port, opts.host);
+
+    if (opts.unref && redis.unref) {
+      redis.unref()
+    }
   }
 
   var prefix = opts.key || 'socket.io';
