@@ -59,7 +59,7 @@ function init(redis, opts){
     if (!opts.socket && !opts.port) throw new Error('Missing redis `port`');
     redis = opts.socket
       ? client(opts.socket)
-      : client(opts.port, opts.host);
+      : client(opts.port, opts.host, { auth_pass: opts.auth_pass ? opts.auth_pass : '' });
   }
 
   var prefix = opts.key || 'socket.io';
