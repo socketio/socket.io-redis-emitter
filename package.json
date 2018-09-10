@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "debug": "~3.1.0",
+    "has-binary2": "~1.0.2",
     "notepack.io": "~2.1.0",
     "redis": "2.6.3",
     "socket.io-parser": "3.1.2"
