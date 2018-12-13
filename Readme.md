@@ -4,69 +4,80 @@
 [![Build Status](https://travis-ci.org/socketio/socket.io-emitter.svg?branch=master)](https://travis-ci.org/socketio/socket.io-emitter)
 [![NPM version](https://badge.fury.io/js/socket.io-emitter.svg)](http://badge.fury.io/js/socket.io-emitter)
 
-`socket.io-emitter` allows you to communicate with socket.io servers
-easily from non-socket.io processes.
+`socket.io-emitter` allows you to communicate with socket.io servers easily and effectively to redis/redis.cluster via pub/sub.
+
+## Redis Pub/Sub: [node_redis](https://redis.io/topics/pubsub)
 
 ## How to use
 
 ```js
-var io = require('socket.io-emitter')({ host: '127.0.0.1', port: 6379 });
-setInterval(function(){
+var io = require('socket.io-emitter')({
+  host: '127.0.0.1',
+  port: 6379
+});
+
+setInterval(function() {
   io.emit('time', new Date);
 }, 5000);
 ```
+
 ```js
-// Different constructor options.
+// Multiple construction options.
 
-//1. Initialize with host:port string
-var io = require('socket.io-emitter')("localhost:6379")
-// 2. Initlize with host, port object.
-var io = require('socket.io-emitter')({ host: '127.0.0.1', port: 6379 });
-// 3. Can use other node_redis compatible client eg; ioredis.
+// 1) Initialize with host:port string.
+var io = require('socket.io-emitter')("localhost:6379");
 
-var Redis = require("ioredis");
-var redis = new Redis();
+// 2) Initialize with host, port JSON object.
+var io = require('socket.io-emitter')({
+  host: '127.0.0.1',
+  port: 6379
+});
+
+// 3) Initialize with an existing node-redis compatible client instance. eg. ioredis.
+var IoRedis = require("ioredis");
+var redis = new IoRedis();
 var io = require('socket.io-emitter')(redis);
 
-// Make the emitter works with redis clustered environment.
-var Cluster = new Redis.Cluster([
-    {
-        host: "localhost",
-        port: 6379
-    },
-    {
-        host: "localhost",
-        port: 6378
-    },
-]);
-var io = require('socket.io-emitter')(Cluster);
-
+// 4) Initialize with Redis.Clustered instance.
+var cluster = new Redis.Cluster([{
+  host: "localhost",
+  port: 6379
+}, {
+  host: "localhost",
+  port: 6378
+}]);
+var io = require('socket.io-emitter')(cluster);
 ```
 
 ## Examples
 
 ```js
-  var io = require('socket.io-emitter')({ host: '127.0.0.1', port: 6379 });
+// Initialize.
+var io = require('socket.io-emitter')({
+  host: '127.0.0.1',
+  port: 6379
+});
 
-  // sending to all clients
-  io.emit('broadcast', /* ... */);
+// Broadcasting to all clients.
+io.emit('broadcast', /* ... */);
 
-  // sending to all clients in 'game' room
-  io.to('game').emit('new-game', /* ... */);
+// Sending to all clients in 'game' room.
+io.to('game').emit('new-game', /* ... */);
 
-  // sending to individual socketid (private message)
-  io.to(<socketid>).emit('private', /* ... */);
+// Sending to an individual socketid (ie. private message)
+io.to(<socketid>).emit('private', /* ... */);
 
-  var nsp = io.of('/admin');
+// Dealing with the 'admin' namespace.
+var nsp = io.of('/admin');
 
-  // sending to all clients in 'admin' namespace
-  nsp.emit('namespace', /* ... */);
+// Sending to all clients in the 'admin' namespace.
+nsp.emit('namespace', /* ... */);
 
-  // sending to all clients in 'admin' namespace and in 'notifications' room
-  nsp.to('notifications').emit('namespace', /* ... */);
+// Sending to all clients in the 'admin' namespace, within the 'notifications' room.
+nsp.to('notifications').emit('namespace', /* ... */);
 ```
 
-**Note:** acknowledgements are not supported
+**Please Note:** Acknowledgements are not currently supported.
 
 ## Error handling
 
@@ -84,39 +95,29 @@ function onError(err){
 
 ## API
 
-### Emitter(client[, opts])
+### Emitter(client)
 
 `client` is a [node_redis](https://github.com/mranney/node_redis)
-compatible client that has been initialized with the `return_buffers`
-option set to `true`. This argument is optional.
+compatible client that has been initialized with the `return_buffers` option set to `true`.
 
-The following options are allowed:
+### Emitter(clientUri)
 
-- `key`: the name of the key to pub/sub events on as prefix (`socket.io`)
-- `host`: host to connect to redis on (`localhost`)
-- `port`: port to connect to redis on (`6379`)
-- `socket`: unix domain socket to connect to redis on (`"/tmp/redis.sock"`)
-
-### Emitter(clientUri[, opts]
-
-Same as above, but `clientUri` is a string of the format `host:port`
-to connect to redis to.
+`clientUri` is a redis connection string in `host:port` format. eg.`localhost:6379`.
 
 ### Emitter(opts)
 
-If you don't want to supply a redis client object, and want
-`socket.io-emitter` to intiialize one for you, make sure to supply the
-`host` and `port` options.
+`host`: redis connection host (required: `localhost`)
+`port`: redis connection port (required: `6379`)
+`key`: redis pub/sub prefix key name for events (default: `socket.io`)
+`socket`: redis connection unix domain socket (default: `"/tmp/redis.sock"`)
 
-### Emitter#to(room:String):Emitter
-### Emitter#in(room:String):Emitter
+### Emitter#to(room:String):Emitter / Emitter#in(room:String):Emitter
 
-Specifies a specific `room` that you want to emit to.
-
+Specifies a specific `room` to emit.
 
 ### Emitter#of(namespace:String):Emitter
 
-Specifies a specific namespace that you want to emit to.
+Specifies a specific namespace to emit.
 
 ## License
 
