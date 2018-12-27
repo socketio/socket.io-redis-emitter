@@ -47,7 +47,7 @@ var io = require('socket.io-emitter')(Cluster);
 
 ```js
   var io = require('socket.io-emitter')({ host: '127.0.0.1', port: 6379 });
-
+  // var io = require('socket.io-emitter')({ host: '127.0.0.1', port: 6379, password: 'xxx }); // suport password connect
   // sending to all clients
   io.emit('broadcast', /* ... */);
 
@@ -95,6 +95,7 @@ The following options are allowed:
 - `key`: the name of the key to pub/sub events on as prefix (`socket.io`)
 - `host`: host to connect to redis on (`localhost`)
 - `port`: port to connect to redis on (`6379`)
+- `password`: password to connect to redis on (`xxx`)
 - `socket`: unix domain socket to connect to redis on (`"/tmp/redis.sock"`)
 
 ### Emitter(clientUri[, opts]

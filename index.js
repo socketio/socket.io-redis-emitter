@@ -42,7 +42,7 @@ var uid = 'emitter';
  * @api public
  */
 
-function init(redis, opts){
+function init(redis, opts) {
   opts = opts || {};
 
   if ('string' == typeof redis) {
@@ -59,6 +59,7 @@ function init(redis, opts){
     if (!opts.socket && !opts.port) throw new Error('Missing redis `port`');
     redis = opts.socket
       ? client(opts.socket)
+      : opts.password ? client(opts.port, opts.host, { auth: opts.password })
       : client(opts.port, opts.host);
   }
 
@@ -67,7 +68,7 @@ function init(redis, opts){
   return new Emitter(redis, prefix, '/');
 }
 
-function Emitter(redis, prefix, nsp){
+function Emitter(redis, prefix, nsp) {
   this.redis = redis;
   this.prefix = prefix;
   this.nsp = nsp;
@@ -81,8 +82,8 @@ function Emitter(redis, prefix, nsp){
  * Apply flags from `Socket`.
  */
 
-flags.forEach(function(flag){
-  Emitter.prototype.__defineGetter__(flag, function(){
+flags.forEach(function (flag) {
+  Emitter.prototype.__defineGetter__(flag, function () {
     debug('flag %s on', flag);
     this._flags[flag] = true;
     return this;
@@ -96,13 +97,13 @@ flags.forEach(function(flag){
  */
 
 Emitter.prototype.in =
-Emitter.prototype.to = function(room){
-  if (!~this._rooms.indexOf(room)) {
-    debug('room %s', room);
-    this._rooms.push(room);
-  }
-  return this;
-};
+  Emitter.prototype.to = function (room) {
+    if (!~this._rooms.indexOf(room)) {
+      debug('room %s', room);
+      this._rooms.push(room);
+    }
+    return this;
+  };
 
 /**
  * Return a new emitter for the given namespace.
@@ -110,7 +111,7 @@ Emitter.prototype.to = function(room){
  * @param {String} namespace
  */
 
-Emitter.prototype.of = function(nsp){
+Emitter.prototype.of = function (nsp) {
   return new Emitter(this.redis, this.prefix, nsp);
 };
 
@@ -120,7 +121,7 @@ Emitter.prototype.of = function(nsp){
  * @api public
  */
 
-Emitter.prototype.emit = function(){
+Emitter.prototype.emit = function () {
   // packet
   var args = Array.prototype.slice.call(arguments);
   var packet = { type: parser.EVENT, data: args, nsp: this.nsp };
