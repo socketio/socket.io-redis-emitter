@@ -14,7 +14,7 @@
     "test": "make test"
   },
   "dependencies": {
-    "debug": "~3.1.0",
+    "debug": "~4.1.0",
     "notepack.io": "~2.1.0",
     "redis": "2.6.3",
     "socket.io-parser": "3.1.2"
