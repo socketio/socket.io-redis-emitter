@@ -106,7 +106,25 @@ describe('emitter', function() {
       });
 
       a.on('broadcast event', function(payload) {
-        setTimeout(done, 1000);
+        setTimeout(() => {
+          a.disconnect();
+          b.disconnect();
+          done();
+        }, 1000);
+      });
+    });
+
+    it('should prepend a missing / to the namespace name', (done) => {
+      const emitter = ioe({ host: 'localhost', port: '6379' });
+      const nsp = emitter.of('nsp'); // missing "/"
+      const cli = client(srv, '/nsp', { forceNew: true });
+      cli.on('connect', () => {
+        nsp.emit('broadcast event', 'broadacast payload');
+      });
+
+      cli.on('broadcast event', () => {
+        cli.disconnect();
+        done();
       });
     });
   });

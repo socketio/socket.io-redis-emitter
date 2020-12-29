@@ -111,7 +111,7 @@ Emitter.prototype.to = function(room){
  */
 
 Emitter.prototype.of = function(nsp){
-  return new Emitter(this.redis, this.prefix, nsp);
+  return new Emitter(this.redis, this.prefix, (nsp[0] !== "/" ? "/" : "") + nsp);
 };
 
 /**
