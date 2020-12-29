@@ -6,7 +6,6 @@
 var client = require('redis').createClient;
 var parser = require('socket.io-parser');
 var msgpack = require('notepack.io');
-var hasBin = require('has-binary2');
 var debug = require('debug')('socket.io-emitter');
 
 /**
@@ -124,7 +123,7 @@ Emitter.prototype.of = function(nsp){
 Emitter.prototype.emit = function(){
   // packet
   var args = Array.prototype.slice.call(arguments);
-  var packet = { type: hasBin(args) ? parser.BINARY_EVENT : parser.EVENT, data: args, nsp: this.nsp };
+  var packet = { type: parser.EVENT, data: args, nsp: this.nsp };
 
   var opts = {
     rooms: this._rooms,
