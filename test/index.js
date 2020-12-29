@@ -28,7 +28,7 @@ describe('emitter', function() {
     var cli = client(srv, { forceNew: true });
     var emitter = ioe({ host: 'localhost', port: '6379' });
 
-    var buffer = new Buffer('asdfasdf', 'utf8');
+    var buffer = Buffer.from('asdfasdf', 'utf8');
     var arraybuffer = Uint8Array.of(1, 2, 3, 4).buffer;
 
     cli.on('connect', function () {

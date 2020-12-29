@@ -11,7 +11,7 @@
     "index.js"
   ],
   "scripts": {
-    "test": "make test"
+    "test": "mocha --reporter spec --slow 200 --bail"
   },
   "dependencies": {
     "debug": "~3.1.0",
