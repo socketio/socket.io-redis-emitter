@@ -11,7 +11,7 @@
     "index.js"
   ],
   "scripts": {
-    "test": "mocha --reporter spec --slow 200 --bail"
+    "test": "mocha --reporter spec --slow 200 --timeout 5000 --bail"
   },
   "dependencies": {
     "debug": "~3.1.0",
