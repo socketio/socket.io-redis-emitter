@@ -20,10 +20,10 @@
     "socket.io-parser": "3.1.2"
   },
   "devDependencies": {
-    "mocha": "~3.2.0",
     "expect.js": "~0.3.1",
-    "socket.io": "~2.0.1",
-    "socket.io-client": "~2.0.1",
-    "socket.io-redis": "^5.1.0"
+    "mocha": "~3.2.0",
+    "socket.io": "^3.0.4",
+    "socket.io-client": "^3.0.4",
+    "socket.io-redis": "^6.0.1"
   }
 }

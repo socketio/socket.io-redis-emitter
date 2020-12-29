@@ -20,6 +20,11 @@ The emitter is also available in other programming languages:
 
 It must be used in conjunction with [socket.io-redis](https://github.com/socketio/socket.io-redis/).
 
+The current version is compatible with both:
+
+- `socket.io-redis@5` (`socket.io@2`)
+- `socket.io-redis@6` (`socket.io@3`)
+
 ## Table of content
 
 - [How to use](#how-to-use)
