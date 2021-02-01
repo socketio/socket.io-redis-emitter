@@ -3,6 +3,7 @@
  * Module dependencies.
  */
 
+var uid2 = require('uid2');
 var client = require('redis').createClient;
 var parser = require('socket.io-parser');
 var msgpack = require('notepack.io');
@@ -13,6 +14,19 @@ var debug = require('debug')('socket.io-emitter');
  */
 
 module.exports = init;
+
+/**
+ * Request Types
+ * **NOTE** Currently only using remoteDisconnect
+ * https://github.com/socketio/socket.io-redis/blob/72fe98ed948acc0f86c4f86c7636befdf8720c24/lib/index.ts#L19
+ */
+var RequestType = {
+  SOCKETS: 0,
+  ALL_ROOMS: 1,
+  REMOTE_JOIN: 2,
+  REMOTE_LEAVE: 3,
+  REMOTE_DISCONNECT: 4
+};
 
 /**
  * Flags.
@@ -72,6 +86,8 @@ function Emitter(redis, prefix, nsp){
   this.prefix = prefix;
   this.nsp = nsp;
   this.channel = this.prefix + '#' + nsp + '#';
+  this.requestChannel = this.prefix + '-request#' + nsp + '#';
+
 
   this._rooms = [];
   this._flags = {};
@@ -144,3 +160,18 @@ Emitter.prototype.emit = function(){
 
   return this;
 };
+
+Emitter.prototype.remoteDisconnect = function(id) {
+  const requestId = uid2(6);
+  var args = Array.prototype.slice.call(arguments);
+
+  const request = JSON.stringify({
+    requestId: requestId,
+    type: RequestType.REMOTE_DISCONNECT,
+    sid: id,
+    close: true,
+  });
+
+  this.redis.publish(this.requestChannel, request);
+
+}
