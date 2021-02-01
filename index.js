@@ -163,7 +163,6 @@ Emitter.prototype.emit = function(){
 
 Emitter.prototype.remoteDisconnect = function(id) {
   const requestId = uid2(6);
-  var args = Array.prototype.slice.call(arguments);
 
   const request = JSON.stringify({
     requestId: requestId,
