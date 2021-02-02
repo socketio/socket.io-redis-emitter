@@ -75,6 +75,7 @@ function Emitter(redis, prefix, nsp){
 
   this._rooms = [];
   this._flags = {};
+  this._except = [];
 }
 
 /**
@@ -104,6 +105,14 @@ Emitter.prototype.to = function(room){
   return this;
 };
 
+Emitter.prototype.except = function(room) {
+  if (!~this._except.indexOf(room)) {
+    debug('except %s', room);
+    this._except.push(room);
+  }
+  return this;
+};
+
 /**
  * Return a new emitter for the given namespace.
  *
@@ -127,7 +136,8 @@ Emitter.prototype.emit = function(){
 
   var opts = {
     rooms: this._rooms,
-    flags: this._flags
+    flags: this._flags,
+    except: this._except
   };
 
   var msg = msgpack.encode([uid, packet, opts]);
@@ -141,6 +151,7 @@ Emitter.prototype.emit = function(){
   // reset state
   this._rooms = [];
   this._flags = {};
+  this._except = [];
 
   return this;
 };

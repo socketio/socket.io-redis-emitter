@@ -214,5 +214,46 @@ describe('emitter', function() {
         });
       });
     });
+
+    it('should be able to exclude a socket by id', function(done) {
+      var pub = redis.createClient();
+      var sub = redis.createClient(null, null, {return_buffers: true});
+      srv = http();
+      var sio = io(srv, {adapter: redisAdapter({pubClient: pub, subClient: sub})});
+
+      var firstId = false;
+      srv.listen(function() {
+        sio.on('connection', function(socket) {
+          if (firstId === false) {
+            firstId = socket.id;
+          }
+        });
+      });
+
+      var a = client(srv, { forceNew: true });
+      var b;
+      a.on('connect', function() {
+        b = client(srv, { forceNew: true });
+        b.on('connect', function() {
+
+          var calls = 0;
+          a.on('except event', function() {
+            calls++;
+            expect().fail();
+          });
+          b.on('except event', function() {
+            calls++;
+            setTimeout(function() {
+              expect(calls).to.be(1);
+              done();
+            }, 1);
+          });
+
+          var emitter = ioe({ host: 'localhost', port: '6379' });
+          emitter.except(firstId).emit('except event');
+
+        });
+      });
+    });
   });
 });
