@@ -48,7 +48,7 @@ The current version is compatible with both:
 Installation: `npm i @socket.io/redis-emitter redis`
 
 ```js
-const { Emitter } = require("socket.io-emitter");
+const { Emitter } = require("@socket.io/redis-emitter");
 const { createClient } = require("redis"); // not included, needs to be explicitly installed
 
 const redisClient = createClient();
@@ -64,7 +64,7 @@ setInterval(() => {
 Installation: `npm i @socket.io/redis-emitter redis @types/redis`
 
 ```ts
-import { Emitter } from "socket.io-emitter";
+import { Emitter } from "@socket.io/redis-emitter";
 import { createClient } from "redis";
 
 const redisClient = createClient();
@@ -94,7 +94,7 @@ io.emit("basicEmit", 1, "2", [3]);
 ## Emit cheatsheet
 
 ```js
-const { Emitter } = require("socket.io-emitter");
+const { Emitter } = require("@socket.io/redis-emitter");
 const { createClient } = require("redis"); // not included, needs to be explicitly installed
 
 const redisClient = createClient();

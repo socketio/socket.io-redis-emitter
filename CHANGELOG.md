@@ -21,7 +21,7 @@ const io = require("socket.io-emitter")({ host: "127.0.0.1", port: 6379 });
 After:
 
 ```js
-const { Emitter } = require("socket.io-emitter");
+const { Emitter } = require("@socket.io/redis-emitter");
 const { createClient } = require("redis");
 
 const redisClient = createClient();
