@@ -1,11 +1,10 @@
 
-# socket.io-emitter
+# The Socket.IO Redis emitter
 
 [![Build Status](https://github.com/socketio/socket.io-emitter/workflows/CI/badge.svg)](https://github.com/socketio/socket.io-emitter/actions)
 [![NPM version](https://badge.fury.io/js/socket.io-emitter.svg)](http://badge.fury.io/js/socket.io-emitter)
 
-`socket.io-emitter` allows you to communicate with Socket.IO servers
-easily from another Node.js process (server side).
+The `@socket.io/redis-emitter` package allows you to easily communicate with a group of Socket.IO servers from another Node.js process (server-side).
 
 ![Emitter diagram](./assets/emitter.png)
 
@@ -46,7 +45,7 @@ The current version is compatible with both:
 
 ### CommonJS
 
-Installation: `npm i socket.io-emitter redis`
+Installation: `npm i @socket.io/redis-emitter redis`
 
 ```js
 const { Emitter } = require("socket.io-emitter");
@@ -62,7 +61,7 @@ setInterval(() => {
 
 ### TypeScript
 
-Installation: `npm i socket.io-emitter redis @types/redis`
+Installation: `npm i @socket.io/redis-emitter redis @types/redis`
 
 ```ts
 import { Emitter } from "socket.io-emitter";

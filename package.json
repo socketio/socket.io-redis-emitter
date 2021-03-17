@@ -1,7 +1,7 @@
 {
-  "name": "socket.io-emitter",
+  "name": "@socket.io/redis-emitter",
   "version": "3.2.0",
-  "description": "",
+  "description": "The Socket.IO Redis emitter, allowing to communicate with a group of Socket.IO servers from another Node.js process",
   "license": "MIT",
   "repository": {
     "type": "git",
