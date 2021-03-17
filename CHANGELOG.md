@@ -1,3 +1,49 @@
+# [4.0.0](https://github.com/socketio/socket.io-emitter/compare/3.2.0...4.0.0) (2021-03-17)
+
+
+### Features
+
+* allow excluding all sockets in a room ([#92](https://github.com/socketio/socket.io-emitter/issues/92)) ([ad920e4](https://github.com/socketio/socket.io-emitter/commit/ad920e4ebe3cf616d5401944e2ba8b12b383d7ed))
+* include features from Socket.IO v4 ([a70db12](https://github.com/socketio/socket.io-emitter/commit/a70db12877d901dd0f7085def0a91145b7c83163))
+* rename the package to @socket/redis-emitter ([592883e](https://github.com/socketio/socket.io-emitter/commit/592883e9d85063411ffde760e0cdef10245e2573))
+
+
+### BREAKING CHANGES
+
+* the "redis" package is not installed by default anymore, you'll now need to create your own redis client and pass it to the Emitter constructor
+
+Before:
+
+```js
+const io = require("socket.io-emitter")({ host: "127.0.0.1", port: 6379 });
+```
+
+After:
+
+```js
+const { Emitter } = require("socket.io-emitter");
+const { createClient } = require("redis");
+
+const redisClient = createClient();
+const io = new Emitter(redisClient);
+```
+
+* `io.to()` is now immutable
+
+Previously, broadcasting to a given room (by calling io.to()) would mutate the io instance, which could lead to surprising behaviors, like:
+
+```js
+io.to("room1");
+io.to("room2").emit(/* ... */); // also sent to room1
+
+// or with async/await
+io.to("room3").emit("details", await fetchDetails()); // random behavior: maybe in room3, maybe to all clients
+```
+
+Calling `io.to()` (or any other broadcast modifier) will now return an immutable instance.
+
+
+
 ## [3.1.2](https://github.com/socketio/socket.io-emitter/compare/3.1.1...3.1.2) (2020-12-29)
 
 
