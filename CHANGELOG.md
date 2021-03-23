@@ -1,5 +1,6 @@
 # [4.0.0](https://github.com/socketio/socket.io-emitter/compare/3.2.0...4.0.0) (2021-03-17)
 
+**Important note**: the name of the package was updated from `socket.io-emitter` to `@socket.io/redis-emitter` in order to better reflect the relationship with Redis.
 
 ### Features
 

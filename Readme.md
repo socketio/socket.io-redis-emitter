@@ -1,8 +1,8 @@
 
 # The Socket.IO Redis emitter
 
-[![Build Status](https://github.com/socketio/socket.io-emitter/workflows/CI/badge.svg)](https://github.com/socketio/socket.io-emitter/actions)
-[![NPM version](https://badge.fury.io/js/socket.io-emitter.svg)](http://badge.fury.io/js/socket.io-emitter)
+[![Build Status](https://github.com/socketio/socket.io-redis-emitter/workflows/CI/badge.svg)](https://github.com/socketio/socket.io-redis-emitter/actions)
+[![NPM version](https://badge.fury.io/js/%40socket.io%2Fredis-emitter.svg)](https://www.npmjs.com/package/@socket.io/redis-emitter)
 
 The `@socket.io/redis-emitter` package allows you to easily communicate with a group of Socket.IO servers from another Node.js process (server-side).
 
