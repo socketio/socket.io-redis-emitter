@@ -1,6 +1,6 @@
 {
   "name": "@socket.io/redis-emitter",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "description": "The Socket.IO Redis emitter, allowing to communicate with a group of Socket.IO servers from another Node.js process",
   "license": "MIT",
   "repository": {

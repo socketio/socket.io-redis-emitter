@@ -1,3 +1,11 @@
+# [4.1.0](https://github.com/socketio/socket.io-redis-emitter/compare/4.0.0...4.1.0) (2021-05-11)
+
+
+### Features
+
+* implement the serverSideEmit functionality ([5feabda](https://github.com/socketio/socket.io-redis-emitter/commit/5feabdac98f0ae44f30dcf36a29a8be328be139e))
+
+
 # [4.0.0](https://github.com/socketio/socket.io-emitter/compare/3.2.0...4.0.0) (2021-03-17)
 
 **Important note**: the name of the package was updated from `socket.io-emitter` to `@socket.io/redis-emitter` in order to better reflect the relationship with Redis.
