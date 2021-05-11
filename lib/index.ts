@@ -24,6 +24,7 @@ enum RequestType {
   REMOTE_LEAVE = 3,
   REMOTE_DISCONNECT = 4,
   REMOTE_FETCH = 5,
+  SERVER_SIDE_EMIT = 6,
 }
 
 export interface EmitterOptions {
@@ -200,6 +201,27 @@ export class Emitter<EmitEvents extends EventsMap = DefaultEventsMap> {
       this.redisClient,
       this.broadcastOptions
     ).disconnectSockets(close);
+  }
+
+  /**
+   * Send a packet to the Socket.IO servers in the cluster
+   *
+   * @param args - any number of serializable arguments
+   */
+  public serverSideEmit(...args: any[]): void {
+    const withAck = typeof args[args.length - 1] === "function";
+
+    if (withAck) {
+      throw new Error("Acknowledgements are not supported");
+    }
+
+    const request = JSON.stringify({
+      uid: UID,
+      type: RequestType.SERVER_SIDE_EMIT,
+      data: args,
+    });
+
+    this.redisClient.publish(this.broadcastOptions.requestChannel, request);
   }
 }
 

@@ -17,7 +17,7 @@ The emitter is also available in other programming languages:
 - Perl: https://metacpan.org/pod/SocketIO::Emitter
 - Rust: https://github.com/epli2/socketio-rust-emitter
 
-It must be used in conjunction with [socket.io-redis](https://github.com/socketio/socket.io-redis/).
+It must be used in conjunction with [`@socket.io/redis-adapter`](https://github.com/socketio/socket.io-redis-adapter/).
 
 The current version is compatible with both:
 

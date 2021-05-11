@@ -2,7 +2,7 @@ import expect = require("expect.js");
 import { createClient, RedisClient } from "redis";
 import { Server, Socket } from "socket.io";
 import { io as ioc, Socket as ClientSocket } from "socket.io-client";
-import { createAdapter } from "socket.io-redis";
+import { createAdapter } from "@socket.io/redis-adapter";
 import { createServer } from "http";
 import { Emitter } from "..";
 import type { AddressInfo } from "net";
@@ -44,10 +44,7 @@ describe("emitter", () => {
     subClient = createClient();
 
     io = new Server(httpServer, {
-      adapter: createAdapter({
-        pubClient,
-        subClient,
-      }),
+      adapter: createAdapter(pubClient, subClient),
     });
 
     httpServer.listen(() => {
@@ -272,6 +269,19 @@ describe("emitter", () => {
           done(new Error("should not happen"));
         });
         clientSockets[2].on("disconnect", partialDone);
+      });
+    });
+
+    describe("serverSideEmit", () => {
+      it("sends an event to other server instances", (done) => {
+        emitter.serverSideEmit("hello", "world", 1, "2");
+
+        io.on("hello", (arg1, arg2, arg3) => {
+          expect(arg1).to.eql("world");
+          expect(arg2).to.eql(1);
+          expect(arg3).to.eql("2");
+          done();
+        });
       });
     });
   });
