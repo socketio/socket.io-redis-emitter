@@ -39,6 +39,7 @@ The current version is compatible with both:
   - [Emitter#socketsJoin()](#emittersocketsjoinroomsstringstring)
   - [Emitter#socketsLeave()](#emittersocketsleaveroomsstringstring)
   - [Emitter#disconnectSockets()](#emitterdisconnectsocketscloseboolean)
+- [Migrating from `socket.io-emitter`](#migrating-from-socketio-emitter)
 - [License](#license)
 
 ## How to use
@@ -185,6 +186,28 @@ io.of("/admin").in("room1").disconnectSockets();
 
 // this also works with a single socket ID
 io.of("/admin").in(theSocketId).disconnectSockets();
+```
+
+## Migrating from `socket.io-emitter`
+
+The package was renamed from `socket.io-emitter` to `@socket.io/redis-emitter` in [v4](https://github.com/socketio/socket.io-redis-emitter/releases/tag/4.0.0), in order to better reflect the relationship with Redis.
+
+To migrate to the new package, you'll need to make sure to provide your own Redis clients, as the package will no longer create Redis clients on behalf of the user.
+
+Before:
+
+```js
+const io = require("socket.io-emitter")({ host: "127.0.0.1", port: 6379 });
+```
+
+After:
+
+```js
+const { Emitter } = require("@socket.io/redis-emitter");
+const { createClient } = require("redis");
+
+const redisClient = createClient();
+const io = new Emitter(redisClient);
 ```
 
 ## License
