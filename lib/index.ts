@@ -73,7 +73,7 @@ export class Emitter<EmitEvents extends EventsMap = DefaultEventsMap> {
    * @param nsp - namespace
    * @public
    */
-  public of(nsp: string): Emitter {
+  public of(nsp: string): Emitter<EmitEvents> {
     return new Emitter(
       this.redisClient,
       this.opts,
