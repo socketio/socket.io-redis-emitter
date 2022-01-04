@@ -1,5 +1,5 @@
 import expect = require("expect.js");
-import { createClient, RedisClient } from "redis";
+import { createClient, RedisClientType } from "redis";
 import { Server, Socket } from "socket.io";
 import { io as ioc, Socket as ClientSocket } from "socket.io-client";
 import { createAdapter } from "@socket.io/redis-adapter";
@@ -31,17 +31,19 @@ const createPartialDone = (
 describe("emitter", () => {
   let port: number,
     io: Server,
-    pubClient: RedisClient,
-    subClient: RedisClient,
+    pubClient: RedisClientType<any, any>,
+    subClient: RedisClientType<any, any>,
     serverSockets: Socket[],
     clientSockets: ClientSocket[],
     emitter: Emitter;
 
-  beforeEach((done) => {
+  beforeEach(async () => {
     const httpServer = createServer();
 
     pubClient = createClient();
     subClient = createClient();
+
+    await Promise.all([pubClient.connect(), subClient.connect()]);
 
     io = new Server(httpServer, {
       adapter: createAdapter(pubClient, subClient),
@@ -56,14 +58,17 @@ describe("emitter", () => {
     });
 
     serverSockets = [];
-    io.on("connection", (socket) => {
-      serverSockets.push(socket);
-      if (serverSockets.length === SOCKETS_COUNT) {
-        setTimeout(done, 100);
-      }
-    });
 
     emitter = new Emitter(pubClient);
+
+    return new Promise((resolve) => {
+      io.on("connection", (socket) => {
+        serverSockets.push(socket);
+        if (serverSockets.length === SOCKETS_COUNT) {
+          setTimeout(resolve, 100);
+        }
+      });
+    });
   });
 
   afterEach(() => {

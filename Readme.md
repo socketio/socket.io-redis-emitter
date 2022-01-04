@@ -44,15 +44,37 @@ The current version is compatible with both:
 
 ## How to use
 
-### CommonJS
+Installation:
 
-Installation: `npm i @socket.io/redis-emitter redis`
+```
+npm i @socket.io/redis-emitter redis
+```
+
+### CommonJS
 
 ```js
 const { Emitter } = require("@socket.io/redis-emitter");
 const { createClient } = require("redis"); // not included, needs to be explicitly installed
 
 const redisClient = createClient();
+
+redisClient.connect().then(() => {
+  const io = new Emitter(redisClient);
+
+  setInterval(() => {
+    io.emit("time", new Date);
+  }, 5000);
+})
+```
+
+With `redis@3`, calling `connect()` is not needed:
+
+```js
+const { Emitter } = require("@socket.io/redis-emitter");
+const { createClient } = require("redis"); // not included, needs to be explicitly installed
+
+const redisClient = createClient();
+
 const io = new Emitter(redisClient);
 
 setInterval(() => {
@@ -62,18 +84,19 @@ setInterval(() => {
 
 ### TypeScript
 
-Installation: `npm i @socket.io/redis-emitter redis @types/redis`
-
 ```ts
 import { Emitter } from "@socket.io/redis-emitter";
 import { createClient } from "redis";
 
 const redisClient = createClient();
-const io = new Emitter(redisClient);
 
-setInterval(() => {
-  io.emit("time", new Date);
-}, 5000);
+redisClient.connect().then(() => {
+  const io = new Emitter(redisClient);
+
+  setInterval(() => {
+    io.emit("time", new Date);
+  }, 5000);
+});
 ```
 
 With typed events:
@@ -87,9 +110,12 @@ interface Events {
 }
 
 const redisClient = createClient();
-const io = new Emitter<Events>(redisClient);
 
-io.emit("basicEmit", 1, "2", [3]);
+redisClient.connect().then(() => {
+  const io = new Emitter<Events>(redisClient);
+
+  io.emit("basicEmit", 1, "2", [3]);
+});
 ```
 
 ## Emit cheatsheet
