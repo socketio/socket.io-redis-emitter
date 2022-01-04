@@ -1,3 +1,12 @@
+## [4.1.1](https://github.com/socketio/socket.io-redis-emitter/compare/4.1.0...4.1.1) (2022-01-04)
+
+
+### Bug Fixes
+
+* **typings:** fix namespace typed-events inheritance ([#108](https://github.com/socketio/socket.io-redis-emitter/issues/108)) ([53c73e1](https://github.com/socketio/socket.io-redis-emitter/commit/53c73e11661067b30cafa8f33a7ec0a61dcbd431))
+
+
+
 # [4.1.0](https://github.com/socketio/socket.io-redis-emitter/compare/4.0.0...4.1.0) (2021-05-11)
 
 
