@@ -90,7 +90,7 @@ export class Emitter<EmitEvents extends EventsMap = DefaultEventsMap> {
   public emit<Ev extends EventNames<EmitEvents>>(
     ev: Ev,
     ...args: EventParams<EmitEvents, Ev>
-  ): true {
+  ): Promise<true> {
     return new BroadcastOperator<EmitEvents>(
       this.redisClient,
       this.broadcastOptions
@@ -170,7 +170,7 @@ export class Emitter<EmitEvents extends EventsMap = DefaultEventsMap> {
    * @param rooms
    * @public
    */
-  public socketsJoin(rooms: string | string[]): void {
+  public socketsJoin(rooms: string | string[]): Promise<void> {
     return new BroadcastOperator(
       this.redisClient,
       this.broadcastOptions
@@ -183,7 +183,7 @@ export class Emitter<EmitEvents extends EventsMap = DefaultEventsMap> {
    * @param rooms
    * @public
    */
-  public socketsLeave(rooms: string | string[]): void {
+  public socketsLeave(rooms: string | string[]): Promise<void> {
     return new BroadcastOperator(
       this.redisClient,
       this.broadcastOptions
@@ -196,7 +196,7 @@ export class Emitter<EmitEvents extends EventsMap = DefaultEventsMap> {
    * @param close - whether to close the underlying connection
    * @public
    */
-  public disconnectSockets(close: boolean = false): void {
+  public disconnectSockets(close: boolean = false): Promise<void> {
     return new BroadcastOperator(
       this.redisClient,
       this.broadcastOptions
@@ -208,7 +208,7 @@ export class Emitter<EmitEvents extends EventsMap = DefaultEventsMap> {
    *
    * @param args - any number of serializable arguments
    */
-  public serverSideEmit(...args: any[]): void {
+  public async serverSideEmit(...args: any[]): Promise<void> {
     const withAck = typeof args[args.length - 1] === "function";
 
     if (withAck) {
@@ -221,7 +221,10 @@ export class Emitter<EmitEvents extends EventsMap = DefaultEventsMap> {
       data: args,
     });
 
-    this.redisClient.publish(this.broadcastOptions.requestChannel, request);
+    await this.redisClient.publish(
+      this.broadcastOptions.requestChannel,
+      request
+    );
   }
 }
 
@@ -344,10 +347,10 @@ export class BroadcastOperator<EmitEvents extends EventsMap>
    * @return Always true
    * @public
    */
-  public emit<Ev extends EventNames<EmitEvents>>(
+  public async emit<Ev extends EventNames<EmitEvents>>(
     ev: Ev,
     ...args: EventParams<EmitEvents, Ev>
-  ): true {
+  ): Promise<true> {
     if (RESERVED_EVENTS.has(ev)) {
       throw new Error(`"${ev}" is a reserved event name`);
     }
@@ -374,7 +377,7 @@ export class BroadcastOperator<EmitEvents extends EventsMap>
 
     debug("publishing message to channel %s", channel);
 
-    this.redisClient.publish(channel, msg);
+    await this.redisClient.publish(channel, msg);
 
     return true;
   }
@@ -385,7 +388,7 @@ export class BroadcastOperator<EmitEvents extends EventsMap>
    * @param rooms
    * @public
    */
-  public socketsJoin(rooms: string | string[]): void {
+  public async socketsJoin(rooms: string | string[]): Promise<void> {
     const request = JSON.stringify({
       type: RequestType.REMOTE_JOIN,
       opts: {
@@ -395,7 +398,10 @@ export class BroadcastOperator<EmitEvents extends EventsMap>
       rooms: Array.isArray(rooms) ? rooms : [rooms],
     });
 
-    this.redisClient.publish(this.broadcastOptions.requestChannel, request);
+    await this.redisClient.publish(
+      this.broadcastOptions.requestChannel,
+      request
+    );
   }
 
   /**
@@ -404,7 +410,7 @@ export class BroadcastOperator<EmitEvents extends EventsMap>
    * @param rooms
    * @public
    */
-  public socketsLeave(rooms: string | string[]): void {
+  public async socketsLeave(rooms: string | string[]): Promise<void> {
     const request = JSON.stringify({
       type: RequestType.REMOTE_LEAVE,
       opts: {
@@ -414,7 +420,10 @@ export class BroadcastOperator<EmitEvents extends EventsMap>
       rooms: Array.isArray(rooms) ? rooms : [rooms],
     });
 
-    this.redisClient.publish(this.broadcastOptions.requestChannel, request);
+    await this.redisClient.publish(
+      this.broadcastOptions.requestChannel,
+      request
+    );
   }
 
   /**
@@ -423,7 +432,7 @@ export class BroadcastOperator<EmitEvents extends EventsMap>
    * @param close - whether to close the underlying connection
    * @public
    */
-  public disconnectSockets(close: boolean = false): void {
+  public async disconnectSockets(close: boolean = false): Promise<void> {
     const request = JSON.stringify({
       type: RequestType.REMOTE_DISCONNECT,
       opts: {
@@ -433,6 +442,9 @@ export class BroadcastOperator<EmitEvents extends EventsMap>
       close,
     });
 
-    this.redisClient.publish(this.broadcastOptions.requestChannel, request);
+    await this.redisClient.publish(
+      this.broadcastOptions.requestChannel,
+      request
+    );
   }
 }

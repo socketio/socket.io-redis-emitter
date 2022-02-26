@@ -96,12 +96,21 @@ describe("emitter", () => {
     });
   });
 
-  it("should support all broadcast modifiers", () => {
-    emitter.in(["room1", "room2"]).emit("test");
-    emitter.except(["room4", "room5"]).emit("test");
-    emitter.volatile.emit("test");
-    emitter.compress(false).emit("test");
-    expect(() => emitter.emit("connect")).to.throwError();
+  it("should support all broadcast modifiers", async () => {
+    await emitter.in(["room1", "room2"]).emit("test");
+    await emitter.except(["room4", "room5"]).emit("test");
+    await emitter.volatile.emit("test");
+    await emitter.compress(false).emit("test");
+
+    let error;
+
+    try {
+      await emitter.emit("connect");
+    } catch (ex) {
+      error = ex;
+    }
+
+    expect(error).to.be.a(Error);
   });
 
   describe("in namespaces", () => {
@@ -147,7 +156,8 @@ describe("emitter", () => {
       serverSockets[0].join("room1");
       serverSockets[1].join("room2");
 
-      clientSockets[0].on("broadcast event", () => {
+      clientSockets[0].on("broadcast event", (payload) => {
+        expect(payload).to.eql("broadcast payload");
         done();
       });
 
@@ -159,7 +169,8 @@ describe("emitter", () => {
     });
 
     it("should be able to emit to a socket by id", (done) => {
-      clientSockets[0].on("broadcast event", () => {
+      clientSockets[0].on("broadcast event", (payload) => {
+        expect(payload).to.eql("broadcast payload");
         done();
       });
 
@@ -173,7 +184,8 @@ describe("emitter", () => {
     });
 
     it("should be able to exclude a socket by id", (done) => {
-      clientSockets[0].on("broadcast event", () => {
+      clientSockets[0].on("broadcast event", (payload) => {
+        expect(payload).to.eql("broadcast payload");
         done();
       });
 
@@ -189,62 +201,50 @@ describe("emitter", () => {
 
   describe("utility methods", () => {
     describe("socketsJoin", () => {
-      it("makes all socket instances join the given room", (done) => {
-        emitter.socketsJoin("room1");
+      it("makes all socket instances join the given room", async () => {
+        await emitter.socketsJoin("room1");
 
-        setTimeout(() => {
-          serverSockets.forEach((socket) => {
-            expect(socket.rooms).to.contain("room1");
-          });
-          done();
-        }, 100);
+        serverSockets.forEach((socket) => {
+          expect(socket.rooms).to.contain("room1");
+        });
       });
 
-      it("makes all socket instances in a room join the given room", (done) => {
-        serverSockets[0].join(["room1", "room2"]);
-        serverSockets[1].join("room1");
-        serverSockets[2].join("room2");
+      it("makes all socket instances in a room join the given room", async () => {
+        await serverSockets[0].join(["room1", "room2"]);
+        await serverSockets[1].join("room1");
+        await serverSockets[2].join("room2");
 
-        emitter.in("room1").socketsJoin("room3");
+        await emitter.in("room1").socketsJoin("room3");
 
-        setTimeout(() => {
-          expect(serverSockets[0].rooms).to.contain("room3");
-          expect(serverSockets[1].rooms).to.contain("room3");
-          expect(serverSockets[2].rooms).to.not.contain("room3");
-          done();
-        }, 100);
+        expect(serverSockets[0].rooms).to.contain("room3");
+        expect(serverSockets[1].rooms).to.contain("room3");
+        expect(serverSockets[2].rooms).to.not.contain("room3");
       });
     });
 
     describe("socketsLeave", () => {
-      it("makes all socket instances leave the given room", (done) => {
-        serverSockets[0].join(["room1", "room2"]);
-        serverSockets[1].join("room1");
-        serverSockets[2].join("room2");
+      it("makes all socket instances leave the given room", async () => {
+        await serverSockets[0].join(["room1", "room2"]);
+        await serverSockets[1].join("room1");
+        await serverSockets[2].join("room2");
 
-        emitter.socketsLeave("room1");
+        await emitter.socketsLeave("room1");
 
-        setTimeout(() => {
-          expect(serverSockets[0].rooms).to.contain("room2");
-          expect(serverSockets[0].rooms).to.not.contain("room1");
-          expect(serverSockets[1].rooms).to.not.contain("room1");
-          done();
-        }, 100);
+        expect(serverSockets[0].rooms).to.contain("room2");
+        expect(serverSockets[0].rooms).to.not.contain("room1");
+        expect(serverSockets[1].rooms).to.not.contain("room1");
       });
 
-      it("makes all socket instances in a room leave the given room", (done) => {
-        serverSockets[0].join(["room1", "room2"]);
-        serverSockets[1].join("room1");
-        serverSockets[2].join("room2");
+      it("makes all socket instances in a room leave the given room", async () => {
+        await serverSockets[0].join(["room1", "room2"]);
+        await serverSockets[1].join("room1");
+        await serverSockets[2].join("room2");
 
-        emitter.in("room2").socketsLeave("room1");
+        await emitter.in("room2").socketsLeave("room1");
 
-        setTimeout(() => {
-          expect(serverSockets[0].rooms).to.contain("room2");
-          expect(serverSockets[0].rooms).to.not.contain("room1");
-          expect(serverSockets[1].rooms).to.contain("room1");
-          done();
-        }, 100);
+        expect(serverSockets[0].rooms).to.contain("room2");
+        expect(serverSockets[0].rooms).to.not.contain("room1");
+        expect(serverSockets[1].rooms).to.contain("room1");
       });
     });
 

@@ -33,5 +33,5 @@ export interface TypedEventBroadcaster<EmitEvents extends EventsMap> {
   emit<Ev extends EventNames<EmitEvents>>(
     ev: Ev,
     ...args: EventParams<EmitEvents, Ev>
-  ): boolean;
+  ): Promise<boolean>;
 }
