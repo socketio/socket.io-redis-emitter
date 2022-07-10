@@ -96,6 +96,34 @@ describe("emitter", () => {
     });
   });
 
+  it("should support the toJSON() method", (done) => {
+    // @ts-ignore
+    BigInt.prototype.toJSON = function () {
+      return String(this);
+    };
+
+    // @ts-ignore
+    Set.prototype.toJSON = function () {
+      return [...this];
+    };
+
+    class MyClass {
+      toJSON() {
+        return 4;
+      }
+    }
+
+    // @ts-ignore
+    emitter.emit("payload", 1n, new Set(["2", 3]), new MyClass());
+
+    clientSockets[0].on("payload", (a, b, c) => {
+      expect(a).to.eql("1");
+      expect(b).to.eql(["2", 3]);
+      expect(c).to.eql(4);
+      done();
+    });
+  });
+
   it("should support all broadcast modifiers", () => {
     emitter.in(["room1", "room2"]).emit("test");
     emitter.except(["room4", "room5"]).emit("test");
