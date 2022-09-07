@@ -1,3 +1,16 @@
+# [5.0.0](https://github.com/socketio/socket.io-redis-emitter/compare/4.1.1...5.0.0) (2022-09-07)
+
+Important note! There is a non backward-compatible change regarding Date objects, which means that the adapter may not be able to properly decode them.
+
+- Reference: https://github.com/darrachequesne/notepack/releases/tag/3.0.0
+- Diff: https://github.com/darrachequesne/notepack/compare/2.3.0...3.0.1
+
+### Features
+
+* add support for the toJSON() method when encoding ([#113](https://github.com/socketio/socket.io-redis-emitter/issues/113)) ([3a6d94d](https://github.com/socketio/socket.io-redis-emitter/commit/3a6d94d0b87917f12d35e062a67e00bba581d005))
+
+
+
 ## [4.1.1](https://github.com/socketio/socket.io-redis-emitter/compare/4.1.0...4.1.1) (2022-01-04)
 
 
