@@ -161,6 +161,7 @@ option set to `true`.
 The following options are allowed:
 
 - `key`: the name of the key to pub/sub events on as prefix (`socket.io`)
+- `parser`: parser to use for encoding messages to Redis ([`notepack.io](https://www.npmjs.com/package/notepack.io))
 
 ### Emitter#to(room:String):BroadcastOperator
 ### Emitter#in(room:String):BroadcastOperator

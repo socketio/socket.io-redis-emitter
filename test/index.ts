@@ -319,3 +319,5 @@ describe("emitter", () => {
     });
   });
 });
+
+require("./custom-parser");

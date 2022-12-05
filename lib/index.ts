@@ -27,17 +27,27 @@ enum RequestType {
   SERVER_SIDE_EMIT = 6,
 }
 
+interface Parser {
+  encode: (msg: any) => any;
+}
+
 export interface EmitterOptions {
   /**
    * @default "socket.io"
    */
   key?: string;
+  /**
+   * The parser to use for encoding messages sent to Redis.
+   * Defaults to notepack.io, a MessagePack implementation.
+   */
+  parser?: Parser;
 }
 
 interface BroadcastOptions {
   nsp: string;
   broadcastChannel: string;
   requestChannel: string;
+  parser: Parser;
 }
 
 interface BroadcastFlags {
@@ -57,6 +67,7 @@ export class Emitter<EmitEvents extends EventsMap = DefaultEventsMap> {
     this.opts = Object.assign(
       {
         key: "socket.io",
+        parser: msgpack,
       },
       opts
     );
@@ -64,6 +75,7 @@ export class Emitter<EmitEvents extends EventsMap = DefaultEventsMap> {
       nsp,
       broadcastChannel: this.opts.key + "#" + nsp + "#",
       requestChannel: this.opts.key + "-request#" + nsp + "#",
+      parser: this.opts.parser,
     };
   }
 
@@ -366,7 +378,7 @@ export class BroadcastOperator<EmitEvents extends EventsMap>
       except: [...this.exceptRooms],
     };
 
-    const msg = msgpack.encode([UID, packet, opts]);
+    const msg = this.broadcastOptions.parser.encode([UID, packet, opts]);
     let channel = this.broadcastOptions.broadcastChannel;
     if (this.rooms && this.rooms.size === 1) {
       channel += this.rooms.keys().next().value + "#";
