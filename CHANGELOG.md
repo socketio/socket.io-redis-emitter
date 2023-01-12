@@ -1,4 +1,53 @@
-# [5.0.0](https://github.com/socketio/socket.io-redis-emitter/compare/4.1.1...5.0.0) (2022-09-07)
+# History
+
+- [5.1.0](#510-2023-01-12) (Jan 2023)
+- [**5.0.0**](#500-2022-09-07) (Sep 2022)
+- [4.1.1](#411-2022-01-04) (Jan 2022)
+- [4.1.0](#410-2021-05-11) (May 2021)
+- [**4.0.0**](#400-2021-03-17) (Mar 2021)
+- [3.1.2](#312-2020-12-29) (Dec 2020)
+- [3.2.0](#320-2020-12-29) (Dec 2020)
+- [3.1.1](#311-2017-10-12) (Oct 2017)
+- [3.1.0](#310-2017-08-03) (Aug 2017)
+- [3.0.1](#301-2017-05-13) (May 2017)
+- [**3.0.0**](#300-2017-05-13) (May 2017)
+- [**2.0.0**](#200-2017-01-12) (Jan 2017)
+- [1.1.0](#110-2017-01-12) (Jan 2017)
+- [**1.0.0**](#100-2015-12-10) (Dec 2015)
+- [0.3.0](#030-2015-12-09) (Dec 2015)
+- [0.2.0](#020-2014-06-07) (Jun 2014)
+
+
+
+# Release notes
+
+## [5.1.0](https://github.com/socketio/socket.io-redis-emitter/compare/5.0.0...5.1.0) (2023-01-12)
+
+
+### Features
+
+* add option to allow usage of custom parser ([#121](https://github.com/socketio/socket.io-redis-emitter/issues/121)) ([48bdd87](https://github.com/socketio/socket.io-redis-emitter/commit/48bdd872f3108fddc1feddf97bcea5359b074d40))
+
+```js
+import { Emitter } from "@socket.io/redis-emitter";
+import { createClient } from "redis";
+
+const redisClient = createClient();
+
+await redisClient.connect();
+
+const io = new Emitter(redisClient, {
+  parser: {
+    encode(msg) {
+      return JSON.stringify(msg);
+    }
+  }
+});
+```
+
+
+
+## [5.0.0](https://github.com/socketio/socket.io-redis-emitter/compare/4.1.1...5.0.0) (2022-09-07)
 
 Important note! There is a non backward-compatible change regarding Date objects, which means that the adapter may not be able to properly decode them.
 
@@ -20,7 +69,7 @@ Important note! There is a non backward-compatible change regarding Date objects
 
 
 
-# [4.1.0](https://github.com/socketio/socket.io-redis-emitter/compare/4.0.0...4.1.0) (2021-05-11)
+## [4.1.0](https://github.com/socketio/socket.io-redis-emitter/compare/4.0.0...4.1.0) (2021-05-11)
 
 
 ### Features
@@ -28,7 +77,7 @@ Important note! There is a non backward-compatible change regarding Date objects
 * implement the serverSideEmit functionality ([5feabda](https://github.com/socketio/socket.io-redis-emitter/commit/5feabdac98f0ae44f30dcf36a29a8be328be139e))
 
 
-# [4.0.0](https://github.com/socketio/socket.io-emitter/compare/3.2.0...4.0.0) (2021-03-17)
+## [4.0.0](https://github.com/socketio/socket.io-emitter/compare/3.2.0...4.0.0) (2021-03-17)
 
 **Important note**: the name of the package was updated from `socket.io-emitter` to `@socket.io/redis-emitter` in order to better reflect the relationship with Redis.
 
@@ -85,7 +134,7 @@ Calling `io.to()` (or any other broadcast modifier) will now return an immutable
 
 
 
-# [3.2.0](https://github.com/socketio/socket.io-emitter/compare/3.1.1...3.2.0) (2020-12-29)
+## [3.2.0](https://github.com/socketio/socket.io-emitter/compare/3.1.1...3.2.0) (2020-12-29)
 
 
 ### Bug Fixes
@@ -98,7 +147,7 @@ Calling `io.to()` (or any other broadcast modifier) will now return an immutable
 
 
 
-# [3.1.0](https://github.com/socketio/socket.io-emitter/compare/3.0.1...3.1.0) (2017-08-03)
+## [3.1.0](https://github.com/socketio/socket.io-emitter/compare/3.0.1...3.1.0) (2017-08-03)
 
 
 ### Features
@@ -111,7 +160,7 @@ Calling `io.to()` (or any other broadcast modifier) will now return an immutable
 
 
 
-# [3.0.0](https://github.com/socketio/socket.io-emitter/compare/2.0.0...3.0.0) (2017-05-13)
+## [3.0.0](https://github.com/socketio/socket.io-emitter/compare/2.0.0...3.0.0) (2017-05-13)
 
 
 ### Features
@@ -121,20 +170,20 @@ Calling `io.to()` (or any other broadcast modifier) will now return an immutable
 
 
 
-# [2.0.0](https://github.com/socketio/socket.io-emitter/compare/1.1.0...2.0.0) (2017-01-12)
+## [2.0.0](https://github.com/socketio/socket.io-emitter/compare/1.1.0...2.0.0) (2017-01-12)
 
 
 
-# [1.1.0](https://github.com/socketio/socket.io-emitter/compare/1.0.0...1.1.0) (2017-01-12)
+## [1.1.0](https://github.com/socketio/socket.io-emitter/compare/1.0.0...1.1.0) (2017-01-12)
 
 
 
-# [1.0.0](https://github.com/socketio/socket.io-emitter/compare/0.3.0...1.0.0) (2015-12-10)
+## [1.0.0](https://github.com/socketio/socket.io-emitter/compare/0.3.0...1.0.0) (2015-12-10)
 
 
 
-# [0.3.0](https://github.com/socketio/socket.io-emitter/compare/0.2.0...0.3.0) (2015-12-09)
+## [0.3.0](https://github.com/socketio/socket.io-emitter/compare/0.2.0...0.3.0) (2015-12-09)
 
 
 
-# [0.2.0](https://github.com/socketio/socket.io-emitter/compare/0.1.0...0.2.0) (2014-06-07)
+## [0.2.0](https://github.com/socketio/socket.io-emitter/compare/0.1.0...0.2.0) (2014-06-07)
