@@ -8,6 +8,7 @@ import type {
   EventsMap,
   TypedEventBroadcaster,
 } from "./typed-events";
+import { PUBLISH } from "./util";
 
 const debug = debugModule("socket.io-emitter");
 
@@ -41,6 +42,11 @@ export interface EmitterOptions {
    * Defaults to notepack.io, a MessagePack implementation.
    */
   parser?: Parser;
+
+  /**
+   * Enable the sharded PubSub or not. Default to `false`.
+   */
+  sharded?: false;
 }
 
 interface BroadcastOptions {
@@ -48,6 +54,7 @@ interface BroadcastOptions {
   broadcastChannel: string;
   requestChannel: string;
   parser: Parser;
+  sharded: false;
 }
 
 interface BroadcastFlags {
@@ -68,6 +75,7 @@ export class Emitter<EmitEvents extends EventsMap = DefaultEventsMap> {
       {
         key: "socket.io",
         parser: msgpack,
+        sharded: false,
       },
       opts
     );
@@ -76,6 +84,7 @@ export class Emitter<EmitEvents extends EventsMap = DefaultEventsMap> {
       broadcastChannel: this.opts.key + "#" + nsp + "#",
       requestChannel: this.opts.key + "-request#" + nsp + "#",
       parser: this.opts.parser,
+      sharded: this.opts.sharded,
     };
   }
 
@@ -233,7 +242,12 @@ export class Emitter<EmitEvents extends EventsMap = DefaultEventsMap> {
       data: args,
     });
 
-    this.redisClient.publish(this.broadcastOptions.requestChannel, request);
+    PUBLISH(
+      this.redisClient,
+      this.broadcastOptions.requestChannel,
+      request,
+      this.opts.sharded
+    );
   }
 }
 
@@ -386,7 +400,7 @@ export class BroadcastOperator<EmitEvents extends EventsMap>
 
     debug("publishing message to channel %s", channel);
 
-    this.redisClient.publish(channel, msg);
+    PUBLISH(this.redisClient, channel, msg, this.broadcastOptions.sharded);
 
     return true;
   }
@@ -407,7 +421,12 @@ export class BroadcastOperator<EmitEvents extends EventsMap>
       rooms: Array.isArray(rooms) ? rooms : [rooms],
     });
 
-    this.redisClient.publish(this.broadcastOptions.requestChannel, request);
+    PUBLISH(
+      this.redisClient,
+      this.broadcastOptions.requestChannel,
+      request,
+      this.broadcastOptions.sharded
+    );
   }
 
   /**
@@ -426,7 +445,12 @@ export class BroadcastOperator<EmitEvents extends EventsMap>
       rooms: Array.isArray(rooms) ? rooms : [rooms],
     });
 
-    this.redisClient.publish(this.broadcastOptions.requestChannel, request);
+    PUBLISH(
+      this.redisClient,
+      this.broadcastOptions.requestChannel,
+      request,
+      this.broadcastOptions.sharded
+    );
   }
 
   /**
@@ -445,6 +469,11 @@ export class BroadcastOperator<EmitEvents extends EventsMap>
       close,
     });
 
-    this.redisClient.publish(this.broadcastOptions.requestChannel, request);
+    PUBLISH(
+      this.redisClient,
+      this.broadcastOptions.requestChannel,
+      request,
+      this.broadcastOptions.sharded
+    );
   }
 }
