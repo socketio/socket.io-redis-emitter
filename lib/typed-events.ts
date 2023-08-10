@@ -30,8 +30,16 @@ export type EventParams<
  * strictly typed `emit` method.
  */
 export interface TypedEventBroadcaster<EmitEvents extends EventsMap> {
+  in(room: string | string[]): TypedEventBroadcaster<EmitEvents>;
+  to(room: string | string[]): TypedEventBroadcaster<EmitEvents>;
+  except(room: string | string[]): TypedEventBroadcaster<EmitEvents>;
+  compress(compress: boolean): TypedEventBroadcaster<EmitEvents>;
+  readonly volatile: TypedEventBroadcaster<EmitEvents>;
   emit<Ev extends EventNames<EmitEvents>>(
     ev: Ev,
     ...args: EventParams<EmitEvents, Ev>
-  ): boolean;
+  ): true;
+  socketsJoin(rooms: string | string[]): void;
+  socketsLeave(rooms: string | string[]): void;
+  disconnectSockets(close: boolean): void;
 }
