@@ -212,7 +212,7 @@ export class Emitter<EmitEvents extends EventsMap = DefaultEventsMap> {
         uid: UID,
         type: MessageType.SERVER_SIDE_EMIT,
         data: {
-          args,
+          packet: args,
         },
       };
       const broadcaster = this.newBroadcastOperator(

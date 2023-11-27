@@ -12,7 +12,6 @@ import {
   UID,
   RESERVED_EVENTS,
   BroadcastOptions,
-  PUBSUB,
 } from "./util";
 
 const debug = debugModule("socket.io-emitter");
